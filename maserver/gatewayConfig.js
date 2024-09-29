@@ -202,6 +202,8 @@ module.exports = class UDPGatewayConfig {
 
             // after the bind delay the request by 250ms
             setTimeout(function () {
+
+                
                 // find the Mobile Alerts Gateway
                 var findGatewayCommand = Buffer.alloc(FIND_GATEWAYS_SIZE);
                 findGatewayCommand.fill(0, 0x00, FIND_GATEWAYS_SIZE);

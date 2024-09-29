@@ -22,7 +22,6 @@ eConf.defaults({
     // if set to null, then default IP address discovery will be used,
     // otherwise use specified IP address
     'localIPv4Address': null,
-
     'mqtt': 'mqtt://127.0.0.1',
     'mqtt_home': 'MobileAlerts/', // default MQTT path for the device parsed data
     'keepalive': 430,
@@ -52,7 +51,7 @@ let locale = eConf.get('locale');
 
 var localIPv4Adress = "";
 if (eConf.get('localIPv4Address') == null) {
-    localIPv4Adress = require('./localIPv4Address')(1);
+    localIPv4Adress = require('./localIPv4Address')(0);
 } else {
     localIPv4Adress = eConf.get('localIPv4Address');
 }
@@ -282,6 +281,12 @@ function processSensorData(buffer) {
 const publicIPv4Adress = eConf.get('publicIPv4adress')
 //In case NAT is used configuration can contain public IP -> Could contain docker system public IP
 const proxyListenIp = publicIPv4Adress ? publicIPv4Adress : localIPv4Adress;
+const gatewayIp = eConf.get('gatewayIp');
+
+console.log('-------- localip: ' + localIPv4Adress);
+console.log('-------- proxyip: ' + proxyListenIp);
+console.log('-------- proxyport: ' + proxyServerPort);
+console.log('-------- gatewayip: ' + gatewayIp);
 
 var gatewayConfigClass = require('./gatewayConfig');
 var gatewayConfig = new gatewayConfigClass();
@@ -289,7 +294,7 @@ gatewayConfig.configureGateways(
     localIPv4Adress
     , proxyListenIp
     , proxyServerPort
-    , eConf.get('gatewayID')
+    , gatewayIp
     , eConf.get('logGatewayInfo')
     , eConf.get('gatewayIp')
     , eConf.get('logfile')
