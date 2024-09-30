@@ -58,7 +58,7 @@ module.exports = class UDPGatewayConfig {
 
         udpSocket.on('close', function () {
             console.log('end udp socket config');
-            var confDict = { 'ip': localIPv4Adress, 'port': proxyServerPort, 'log': logFile, 'cloudForward': mobileAlertsCloudForward };
+            var confDict = { 'ip': proxyIPv4Address, 'port': proxyServerPort, 'log': logFile, 'cloudForward': mobileAlertsCloudForward };
             console.log('dict: ' + JSON.stringify(confDict));
             _callback(gatewayArr, confDict);
         })
@@ -119,81 +119,81 @@ module.exports = class UDPGatewayConfig {
                 }
                 gatewayArr.push(gatewayConfigObj);
 
-                // if (command == GET_CONFIG) {
-                //     const currentProxyServerActiveFlag = message.readInt8(0x72);
-                //     // strip the <NUL> bytes
-                //     const currentProxyServerName =
-                //         message.toString('utf-8', 0x73, 0x73 + 65).replace(/\0/g, '');
-                //     const currentProxyServerPort = message.readInt16BE(0xb4);
+                if (command == GET_CONFIG) {
+                    const currentProxyServerActiveFlag = message.readInt8(0x72);
+                    // strip the <NUL> bytes
+                    const currentProxyServerName =
+                        message.toString('utf-8', 0x73, 0x73 + 65).replace(/\0/g, '');
+                    const currentProxyServerPort = message.readInt16BE(0xb4);
 
-                //     // update proxy settings, if they are different from the expected ones
-                //     if (currentProxyServerActiveFlag != proxyServerActiveFlag
-                //         || currentProxyServerPort != proxyServerPort
-                //         || currentProxyServerName != proxyIPv4Address) {
-                //         console.log('### Update Mobile Alerts Gateway Proxy Settings');
+                    // update proxy settings, if they are different from the expected ones
+                    if (currentProxyServerActiveFlag != proxyServerActiveFlag
+                        || currentProxyServerPort != proxyServerPort
+                        || currentProxyServerName != proxyIPv4Address) {
+                        console.log('### Update Mobile Alerts Gateway Proxy Settings');
 
-                //         // build a set config buffer by copying everything out of the get config
-                //         var sendConfigBuffer = Buffer.alloc(SET_CONFIG_SIZE);
-                //         sendConfigBuffer.fill(0, 0x00, SET_CONFIG_SIZE);
-                //         // Set Configuration command
-                //         sendConfigBuffer.writeInt16BE(SET_CONFIG, 0x00);
-                //         // copy the Mobile Alerts Gateway ID
-                //         message.copy(sendConfigBuffer, 0x02, 0x02, 0x08);
-                //         // size of the package
-                //         sendConfigBuffer.writeInt16BE(SET_CONFIG_SIZE, 0x08);
-                //         // Use DHCP
-                //         sendConfigBuffer.writeInt8(message.readInt8(0x0f), 0x0a);
-                //         // Fixed IP
-                //         sendConfigBuffer.writeInt32BE(message.readInt32BE(0x10), 0x0b);
-                //         // DHCP Netmask
-                //         sendConfigBuffer.writeInt32BE(message.readInt32BE(0x14), 0x0f);
-                //         // Fixed Gateway
-                //         sendConfigBuffer.writeInt32BE(message.readInt32BE(0x18), 0x13);
-                //         // Name
-                //         sendConfigBuffer.write(
-                //             message.toString('utf-8', 0x1c, 0x1c + 21), 0x17, 'utf-8');
-                //         // Data Server Name
-                //         sendConfigBuffer.write(
-                //             message.toString('utf-8', 0x31, 0x31 + 65), 0x2c, 'utf-8');
-                //         // Use Proxy
-                //         sendConfigBuffer.writeInt8(message.readInt8(0x72), 0x6d);
-                //         // Proxy Server Name
-                //         sendConfigBuffer.write(
-                //             message.toString('utf-8', 0x73, 0x73 + 65), 0x6e, 'utf-8');
-                //         // Proxy Port
-                //         sendConfigBuffer.writeInt16BE(message.readInt16BE(0xb4), 0xaf);
-                //         // Fixed DNS IP
-                //         sendConfigBuffer.writeInt32BE(message.readInt32BE(0xb6), 0xb1);
+                        // build a set config buffer by copying everything out of the get config
+                        var sendConfigBuffer = Buffer.alloc(SET_CONFIG_SIZE);
+                        sendConfigBuffer.fill(0, 0x00, SET_CONFIG_SIZE);
+                        // Set Configuration command
+                        sendConfigBuffer.writeInt16BE(SET_CONFIG, 0x00);
+                        // copy the Mobile Alerts Gateway ID
+                        message.copy(sendConfigBuffer, 0x02, 0x02, 0x08);
+                        // size of the package
+                        sendConfigBuffer.writeInt16BE(SET_CONFIG_SIZE, 0x08);
+                        // Use DHCP
+                        sendConfigBuffer.writeInt8(message.readInt8(0x0f), 0x0a);
+                        // Fixed IP
+                        sendConfigBuffer.writeInt32BE(message.readInt32BE(0x10), 0x0b);
+                        // DHCP Netmask
+                        sendConfigBuffer.writeInt32BE(message.readInt32BE(0x14), 0x0f);
+                        // Fixed Gateway
+                        sendConfigBuffer.writeInt32BE(message.readInt32BE(0x18), 0x13);
+                        // Name
+                        sendConfigBuffer.write(
+                            message.toString('utf-8', 0x1c, 0x1c + 21), 0x17, 'utf-8');
+                        // Data Server Name
+                        sendConfigBuffer.write(
+                            message.toString('utf-8', 0x31, 0x31 + 65), 0x2c, 'utf-8');
+                        // Use Proxy
+                        sendConfigBuffer.writeInt8(message.readInt8(0x72), 0x6d);
+                        // Proxy Server Name
+                        sendConfigBuffer.write(
+                            message.toString('utf-8', 0x73, 0x73 + 65), 0x6e, 'utf-8');
+                        // Proxy Port
+                        sendConfigBuffer.writeInt16BE(message.readInt16BE(0xb4), 0xaf);
+                        // Fixed DNS IP
+                        sendConfigBuffer.writeInt32BE(message.readInt32BE(0xb6), 0xb1);
 
-                //         // Use Proxy
-                //         sendConfigBuffer.writeInt8(proxyServerActiveFlag, 0x6d);
-                //         // erase Proxy Server Name
-                //         sendConfigBuffer.fill(0, 0x6e, 0xaf);
-                //         // copy new proxy server name
-                //         sendConfigBuffer.write(proxyIPv4Address, 0x6e, 'utf-8');
-                //         // Proxy Port
-                //         sendConfigBuffer.writeInt16BE(proxyServerPort, 0xaf);
+                        // Use Proxy
+                        sendConfigBuffer.writeInt8(proxyServerActiveFlag, 0x6d);
+                        // erase Proxy Server Name
+                        sendConfigBuffer.fill(0, 0x6e, 0xaf);
+                        // copy new proxy server name
+                        sendConfigBuffer.write(proxyIPv4Address, 0x6e, 'utf-8');
+                        // Proxy Port
+                        sendConfigBuffer.writeInt16BE(proxyServerPort, 0xaf);
 
-                //         udpSocket.send(sendConfigBuffer, PORT, GATEWAY_ADDR, function () {
+                        udpSocket.send(sendConfigBuffer, PORT, GATEWAY_ADDR, function () {
 
-                //             // reboot the gateway after a reconfig
-                //             var rebootGatewayCommand = Buffer.alloc(REBOOT_SIZE);
-                //             rebootGatewayCommand.fill(0, 0x00, REBOOT_SIZE);
-                //             rebootGatewayCommand.writeInt16BE(REBOOT, 0x00);
-                //             // copy the Mobile Alerts Gateway ID
-                //             message.copy(rebootGatewayCommand, 0x02, 0x02, 0x08);
-                //             rebootGatewayCommand.writeInt16BE(REBOOT_SIZE, 0x08);
+                            // reboot the gateway after a reconfig
+                            var rebootGatewayCommand = Buffer.alloc(REBOOT_SIZE);
+                            rebootGatewayCommand.fill(0, 0x00, REBOOT_SIZE);
+                            rebootGatewayCommand.writeInt16BE(REBOOT, 0x00);
+                            // copy the Mobile Alerts Gateway ID
+                            message.copy(rebootGatewayCommand, 0x02, 0x02, 0x08);
+                            rebootGatewayCommand.writeInt16BE(REBOOT_SIZE, 0x08);
 
-                //             udpSocket.send(rebootGatewayCommand, PORT, GATEWAY_ADDR, function () {
-                //                 console.log('handled gateway ' + GATEWAY_ADDR);
-                //                 udpSocket.disconnect();
-                //             });
-                //         });
-                //     } else {
-                //         //udpSocket.close();
-                //         console.log('data from msg did not match...');
-                //     }
-                // }
+                            udpSocket.send(rebootGatewayCommand, PORT, GATEWAY_ADDR, function () {
+                                console.log('handled gateway ' + GATEWAY_ADDR);
+                                udpSocket.disconnect();
+                            });
+                        });
+                    } else {
+                        //udpSocket.close();
+                        console.log('data from msg did not match...');
+                    }
+                }
             }
         });
 

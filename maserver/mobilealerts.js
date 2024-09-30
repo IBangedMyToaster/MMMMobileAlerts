@@ -278,7 +278,7 @@ function processSensorData(buffer) {
 // #############################################################
 
 // configure the Mobile Alerts Gateway to use us as a proxy server, if necessary
-const publicIPv4Adress = eConf.get('proxyListenIp')
+const publicIPv4Adress = eConf.get('publicIPv4adress')
 //In case NAT is used configuration can contain public IP -> Could contain docker system public IP
 const proxyListenIp = publicIPv4Adress ? publicIPv4Adress : localIPv4Adress;
 const gatewayIp = eConf.get('gatewayIp');
