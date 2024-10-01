@@ -130,7 +130,8 @@ function sendMQTTSensorOfflineStatus(sensor, isOffline) {
     else
         console.log('### Offline state ', sensor.ID, JSON.stringify(json))
     if (eConf.get('publish_type') == 'default') {
-        mqttClient.publish(mqttHome + sensor.ID + '/json', JSON.stringify(json));
+        // mqttClient.publish(mqttHome + sensor.ID + '/json', JSON.stringify(json));
+        mqttClient.publish(mqttHome, JSON.stringify(json));
     } else if (eConf.get('publish_type') == 'sonoff') {
         publishSonoffSensorState(json);
     }
@@ -153,7 +154,8 @@ function sendMQTT(sensor) {
         console.log(sensor.ID, mqttHome + sensor.ID + '/json', JSON.stringify(json))
 
     if (eConf.get('publish_type') == 'default') {
-        mqttClient.publish(mqttHome + sensor.ID + '/json', JSON.stringify(json));
+        // mqttClient.publish(mqttHome + sensor.ID + '/json', JSON.stringify(json));
+        mqttClient.publish(mqttHome, JSON.stringify(json));
     } else if (eConf.get('publish_type') == 'sonoff') {
         publishSonoffSensorState(json);
     }
